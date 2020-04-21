@@ -1,63 +1,56 @@
 <!-- 表单构造器 -->
 <template>
-  <a-layout class="dy-form-editor">
+  <div class="ant-dynamic-form">
     <!-- 左侧操作栏 -->
-    <a-layout-sider
-      :width="componentPanelWidth"
-      theme="light"
-      :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0, border: '1px solid #e0e0e0'}"
-    >
+    <div class="left-container" :style="{ width: `${componentPanelWidth}px` }">
       <vue-draggable-resizable
         class="panel-draggable-handle component-panel-draggable"
         :w="1"
         :z="9999"
         axis="x"
         @dragging="x => handleWidthDrag(x, 'componentPanelWidth')"
+        @dragstop="state.componentPanelWidth = 0"
         :resizable="false"
       ></vue-draggable-resizable>
       <component-panel @on-element-select="handleEleSelect"></component-panel>
-    </a-layout-sider>
-    <a-layout
-      :style="{ marginLeft: `${componentPanelWidth}px`, marginRight: `${settingPanelWidth}px`, height: '100vh' }"
-    >
+    </div>
+    <div class="center-container">
       <!-- 工具栏 -->
-      <a-layout-header
-        :style="{ background: '#fff', padding: 0, borderBottom: '1px solid #e0e0e0', height: '45px' }"
-      >
+      <div class="tools-panel">
         <tools-panel
           @on-setting-change="handleSettingChange"
           @on-mode-change="handleModeChange"
           @on-clear="handleClearPanel"
         ></tools-panel>
-      </a-layout-header>
+      </div>
       <!-- 表单构建面板 -->
-      <a-layout-content :style="{ background: '#fff' }">
+      <div class="editor-panel">
         <editor-panel
           @on-element-add="handleEleAdd"
           @on-element-select="handleEleSelect"
-          @on-element-remove="handleEleRemove">
-        </editor-panel>
-      </a-layout-content>
-    </a-layout>
+          @on-element-copy="handleEleCopy"
+          @on-element-remove="handleEleRemove"
+        ></editor-panel>
+      </div>
+    </div>
     <!-- 右侧表单项配置模块 -->
-    <a-layout-sider
-      :width="settingPanelWidth"
-      :style="{ background: '#fff', overflow: 'auto', height: '100vh', position: 'fixed', right: 0, border: '1px solid #e0e0e0' }"
-    >
+    <div class="right-container" :style="{ width: `${settingPanelWidth}px` }">
       <vue-draggable-resizable
         class="panel-draggable-handle setting-panel-draggable"
         :w="1"
         :z="9999"
         axis="x"
         @dragging="x => handleWidthDrag(x, 'settingPanelWidth')"
+        @dragstop="state.settingPanelWidth = 0"
         :resizable="false"
       ></vue-draggable-resizable>
       <setting-panel></setting-panel>
-    </a-layout-sider>
-  </a-layout>
+    </div>
+  </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import ComponentPanel from './define/ComponentPanel'
 import EditorPanel from './panel/EditorPanel'
 import SettingPanel from './setting/SettingPanel'
@@ -77,6 +70,7 @@ export default {
       type: Object,
       default: () => {
         return {
+          _key: 'root',
           component: 'AFormModel',
           options: {
             labelCol: { span: 4 },
@@ -93,7 +87,8 @@ export default {
       getModeFromParent: () => this.editorMode,
       getCurSelectEle: () => this.curSelectEle,
       getFormSetting: () => this.formSetting,
-      getFormValue: () => this.formValue
+      getFormValue: () => this.formValue,
+      generatorKey: this.generatorKey
     }
   },
   watch: {
@@ -114,15 +109,35 @@ export default {
   },
   data () {
     return {
+      // 计数器
+      counter: {},
       editorMode: 'edit',
       curSelectEle: null,
       componentPanelWidth: 240,
       settingPanelWidth: 360,
+      state: {},
       formValue: {},
       formSetting: {}
     }
   },
   methods: {
+    /**
+     * 生成对应组件类型的唯一key值
+     */
+    generatorKey (component) {
+      let componentName
+      if (typeof component === 'object') {
+        componentName = component.name
+      } else {
+        componentName = component
+      }
+      if (this.counter[componentName]) {
+        this.counter[componentName] = ++this.counter[componentName]
+      } else {
+        this.counter[componentName] = 1
+      }
+      return componentName + this.counter[componentName]
+    },
     findElementByKey (children, key) {
       for (const i in children) {
         const child = children[i]
@@ -137,7 +152,10 @@ export default {
     handleSettingChange (setting) {
       this.formSetting = setting
       if (this.curSelectEle) {
-        this.curSelectEle = this.findElementByKey(setting.children, this.curSelectEle._key)
+        this.curSelectEle = this.findElementByKey(
+          setting.children,
+          this.curSelectEle._key
+        )
       }
     },
     handleEleAdd (ele) {
@@ -145,6 +163,23 @@ export default {
     },
     handleEleSelect (ele) {
       this.curSelectEle = ele
+    },
+    handleEleCopy (list, element, index) {
+      const cloneEle = _.cloneDeep(element)
+      // generator new key
+      const deepGenKey = ele => {
+        if (!_.isEmpty(ele.children)) {
+          ele.children.forEach(o => deepGenKey(o))
+        }
+        const newKey = this.generatorKey(ele.component)
+        ele._key = newKey
+        if (_.get(ele, 'formOptions.prop')) {
+          ele.formOptions.prop = newKey
+        }
+      }
+      deepGenKey(cloneEle)
+      list.push(cloneEle)
+      this.curSelectEle = cloneEle
     },
     /**
      * 处理节点删除事件
@@ -163,6 +198,7 @@ export default {
       }
     },
     handleWidthDrag (x, key) {
+      console.log(x, key)
       const isComponentPanel = key === 'componentPanelWidth'
       this.dragOffset = isComponentPanel ? x : -x
       const minWidth = isComponentPanel ? 240 : 360
@@ -182,13 +218,39 @@ export default {
 </script>
 
 <style lang="less">
-.dy-form-editor {
-  .setting-panel-draggable {
-    left: 0 !important;
+.ant-dynamic-form {
+  display: flex;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  background: #fff;
+  align-items: stretch;
+  .left-container {
+    overflow: auto;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    .component-panel-draggable {
+      left: auto;
+      right: 0;
+    }
   }
-  .component-panel-draggable {
-    left: auto !important;
-    right: 0 !important;
+  .center-container {
+    flex: 1;
+    .tools-panel {
+      border-bottom: 2px solid #e0e0e0;
+      height: 45px;
+    }
+    .editor-panel {
+      min-height: 240px;
+    }
+  }
+  .right-container {
+    overflow: auto;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    .setting-panel-draggable {
+      left: 0;
+    }
   }
   .panel-draggable-handle {
     position: absolute;
@@ -206,7 +268,7 @@ export default {
     height: 3px;
     box-sizing: border-box;
     font-size: 0;
-    content: '';
+    content: "";
     overflow: hidden;
     padding: 0;
   }
