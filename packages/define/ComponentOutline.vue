@@ -2,7 +2,7 @@
 <template>
   <div class="component-outline">
     <div style="padding: 8px">
-      <a-input-search placeholder="搜索组件" @change="handleSearch"/>
+      <a-input-search placeholder="搜索组件" @change="handleSearch" />
     </div>
     <a-tree
       :treeData="treeData"
@@ -62,7 +62,9 @@ export default {
   methods: {
     transfer (elements) {
       return elements.map(o => {
-        const componentObj = this.allComponents.find(c => c.component === o.component)
+        const componentObj = this.allComponents.find(
+          c => c.component === o.component
+        )
         let title
         const componentName = componentObj ? componentObj.name : o.component
         const options = o.options || {}
@@ -141,5 +143,4 @@ const getParentKey = (key, tree) => {
 </script>
 
 <style lang="less" scoped>
-
 </style>
