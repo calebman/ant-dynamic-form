@@ -33,11 +33,15 @@
       </a-form-model-item>
       <!-- 操作按钮 移除与拖拽 -->
       <div v-show="isSelectStatus(element)">
-        <div class="view-remove" @click.stop="handleComponentDelete(element, index)">
-          <merge-icon type="delete"></merge-icon>
+        <div class="view-remove">
+          <merge-icon type="copy" @click.stop="handleComponentCopy(element, index)"></merge-icon>
+          <merge-icon type="delete" @click.stop="handleComponentDelete(element, index)"></merge-icon>
         </div>
         <div class="view-drag">
-          <merge-icon type="drag" class="drag-widget"></merge-icon>
+          <div class="triangle"></div>
+          <div class="desc">
+            <merge-icon class="drag-widget" type="drag"></merge-icon>
+          </div>
         </div>
       </div>
     </div>
@@ -45,12 +49,12 @@
 </template>
 
 <script>
-import PanelInjectMixin from "~/common/panel-inject-mixin";
-import Draggable from "vuedraggable";
-import ElementLayout from "./layout";
-import MergeIcon from "~/components/MergeIcon";
+import PanelInjectMixin from '~/common/panel-inject-mixin'
+import Draggable from 'vuedraggable'
+import ElementLayout from './layout'
+import MergeIcon from '~/components/MergeIcon'
 export default {
-  name: "NestedElement",
+  name: 'NestedElement',
   mixins: [PanelInjectMixin],
   components: {
     Draggable,
@@ -61,52 +65,55 @@ export default {
     list: {
       type: Array,
       default: () => {
-        return null;
+        return null
       }
     },
     dragElementClass: {
       type: String,
-      default: "drag-element-group"
+      default: 'drag-element-group'
     }
   },
   computed: {
-    dragOptions() {
+    dragOptions () {
       return {
         animation: 200,
         // 预览模式下修改group的值 防止左侧组件面板的拖拽生效
-        group: this.isEditStatus ? "element" : "disabled-element",
-        ghostClass: "drag-ghost",
-        handle: ".drag-widget"
-      };
+        group: this.isEditStatus ? 'element' : 'disabled-element',
+        ghostClass: 'drag-ghost',
+        handle: '.drag-widget'
+      }
     },
-    showEmptyTip() {
-      return this.isEditStatus && (!this.list || this.list.length === 0);
+    showEmptyTip () {
+      return this.isEditStatus && (!this.list || this.list.length === 0)
     },
-    activeSelectStatus() {
-      return this.isEditStatus && this.isSelect;
+    activeSelectStatus () {
+      return this.isEditStatus && this.isSelect
     }
   },
   methods: {
-    isSelectStatus(ele) {
+    isSelectStatus (ele) {
       return !!(
         this.isEditStatus &&
         this.curSelectEle &&
         ele === this.curSelectEle
-      );
+      )
     },
-    handleEleClick(element) {
+    handleEleClick (element) {
       if (this.isEditStatus && element !== this.curSelectEle) {
-        this.$emit("on-element-select", element);
+        this.$emit('on-element-select', element)
       }
     },
-    handleComponentDelete(element, index) {
-      this.$emit("on-element-remove", this.list, element, index);
+    handleComponentCopy (element, index) {
+      this.$emit('on-element-copy', this.list, element, index)
     },
-    handleElementAdd({ newIndex }) {
-      this.$emit("on-element-add", this.list[newIndex - 1]);
+    handleComponentDelete (element, index) {
+      this.$emit('on-element-remove', this.list, element, index)
+    },
+    handleElementAdd ({ newIndex }) {
+      this.$emit('on-element-add', this.list[Math.max(newIndex - 1, 0)])
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -137,7 +144,6 @@ export default {
       border: 1px solid #409eff;
     }
     &:hover {
-      // background: #ecf5ff;
       border: 1px solid #409eff;
     }
     .view-remove {
@@ -147,7 +153,7 @@ export default {
       height: 28px;
       color: #fff;
       line-height: 28px;
-      background: #ff7875;
+      background: #409eff;
       z-index: 9;
       i {
         font-size: 14px;
@@ -158,19 +164,28 @@ export default {
     }
     .view-drag {
       position: absolute;
-      left: -2px;
-      top: -2px;
-      bottom: -18px;
-      height: 28px;
-      line-height: 28px;
-      background: #409eff;
-      z-index: 9;
-      color: #fff;
-      i {
-        font-size: 14px;
-        color: #fff;
-        margin: 0 5px;
-        cursor: move;
+      top: 0px;
+      left: 0px;
+      width: 36px;
+      height: 36px;
+      overflow: hidden;
+      .triangle {
+        width: 0;
+        height: 0;
+        border-top: 36px solid;
+        border-right: 36px solid transparent;
+        border-top-color: #409eff;
+      }
+      .desc {
+        position: absolute;
+        top: 0;
+        left: 2px;
+        z-index: 1;
+        i {
+          font-size: 17px;
+          color: #fff;
+          cursor: move;
+        }
       }
     }
   }
