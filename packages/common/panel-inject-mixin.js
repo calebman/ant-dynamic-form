@@ -6,10 +6,8 @@
  * @field curSelectEle 当前选中的节点
  * @field mode 面板模式 preview、edit 代表 预览模式、编辑模式
  */
-// 组件计数器 用于key的生产
-const counter = {}
 export default {
-  inject: ['getFormSetting', 'getFormValue', 'getCurSelectEle', 'getModeFromParent'],
+  inject: ['generatorKey', 'getFormSetting', 'getFormValue', 'getCurSelectEle', 'getModeFromParent'],
   computed: {
     formSetting () {
       return this.getFormSetting()
@@ -28,25 +26,6 @@ export default {
     },
     isEditStatus () {
       return this.mode === 'edit'
-    }
-  },
-  methods: {
-     /**
-     * 生成对应组件类型的唯一key值
-     */
-    generatorKey (component) {
-      let componentName
-      if (typeof component === 'object') {
-        componentName = component.name
-      } else {
-        componentName = component
-      }
-      if (counter[componentName]) {
-        counter[componentName] = ++counter[componentName]
-      } else {
-        counter[componentName] = 1
-      }
-      return componentName + counter[componentName]
     }
   }
 }

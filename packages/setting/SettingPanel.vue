@@ -91,7 +91,7 @@ export default {
     font-weight: 300;
     height: 100%;
     width: 100%;
-    font-size: 18px;
+    font-size: 16px;
     color: #ccc;
     display: table;
     & > .inner {
