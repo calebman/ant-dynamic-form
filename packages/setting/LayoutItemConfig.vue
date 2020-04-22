@@ -88,6 +88,7 @@ export default {
 
 <style lang="less" scoped>
 .layout-item-config {
+  margin-bottom: 60px;
   .empty-layout {
     margin: 8px;
   }
