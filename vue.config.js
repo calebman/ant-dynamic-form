@@ -1,6 +1,34 @@
 const path = require('path')
+const webpack = require('webpack')
+const isProd = process.env.NODE_ENV === 'production'
+const assetsCDN = {
+  // webpack build externals
+  externals: {
+    vue: 'Vue',
+    'ant-design-vue': 'antd',
+    moment: 'moment',
+    vuescroll: 'vuescroll',
+    Sortable: 'Sortable',
+    vuedraggable: 'vuedraggable',
+    'vue-draggable-resizable': 'VueDraggableResizable'
+  },
+  css: [
+    '//cdn.jsdelivr.net/npm/ant-design-vue@1.5.3/dist/antd.min.css'
+  ],
+  js: [
+    '//cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
+    '//cdn.jsdelivr.net/npm/ant-design-vue@1.5.3/dist/antd.min.js',
+    '//cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js',
+    '//cdn.jsdelivr.net/npm/moment@2.24.0/locale/zh-cn.js',
+    '//cdn.jsdelivr.net/npm/vuescroll@4.15.0/dist/vuescroll.min.js',
+    '//cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js',
+    '//cdn.jsdelivr.net/npm/vuedraggable@2.23.2/dist/vuedraggable.umd.min.js',
+    '//cdn.jsdelivr.net/npm/vue-draggable-resizable@2.1.2/dist/VueDraggableResizable.umd.min.js'
+  ]
+}
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/ant-dynamic-form/' : '/',
+  // publicPath: isProd ? '/ant-dynamic-form/' : '/',
+  publicPath: isProd ? '/dist/' : '/',
   // 修改 pages 入口
   pages: {
     index: {
@@ -8,6 +36,15 @@ module.exports = {
       template: 'public/index.html', // 模板
       filename: 'index.html' // 输出文件
     }
+  },
+  configureWebpack: {
+    // webpack plugins
+    plugins: [
+      // Ignore all locale files of moment.js
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+    ],
+    // if prod, add externals
+    externals: isProd ? assetsCDN.externals : {}
   },
   // 扩展 webpack 配置
   chainWebpack: config => {
@@ -24,10 +61,15 @@ module.exports = {
       .include.add(/examples/).end()
       .use('babel')
       .loader('babel-loader')
-      .tap(options => {
-        // 修改它的选项...
-        return options
+
+    // if prod is on
+    // assets require on cdn
+    if (isProd) {
+      config.plugin('html-index').tap(args => {
+        args[0].cdn = assetsCDN
+        return args
       })
+    }
   },
   css: {
     loaderOptions: {
@@ -48,4 +90,5 @@ module.exports = {
     // development server port 7000
     port: 7000
   },
+  productionSourceMap: false
 }
