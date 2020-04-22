@@ -4,12 +4,13 @@
     <!-- 左侧操作栏 -->
     <div class="left-container" :style="{ width: `${componentPanelWidth}px` }">
       <vue-draggable-resizable
+        ref="componentPanelWidth"
         class="panel-draggable-handle component-panel-draggable"
-        :w="1"
+        parent
         :z="9999"
         axis="x"
+        @hook:mounted="handleDragMounted('componentPanelWidth')"
         @dragging="x => handleWidthDrag(x, 'componentPanelWidth')"
-        @dragstop="state.componentPanelWidth = 0"
         :resizable="false"
       ></vue-draggable-resizable>
       <component-panel @on-element-select="handleEleSelect"></component-panel>
@@ -36,12 +37,13 @@
     <!-- 右侧表单项配置模块 -->
     <div class="right-container" :style="{ width: `${settingPanelWidth}px` }">
       <vue-draggable-resizable
+        ref="settingPanelWidth"
         class="panel-draggable-handle setting-panel-draggable"
-        :w="1"
+        parent
         :z="9999"
         axis="x"
+        @hook:mounted="handleDragMounted('settingPanelWidth')"
         @dragging="x => handleWidthDrag(x, 'settingPanelWidth')"
-        @dragstop="state.settingPanelWidth = 0"
         :resizable="false"
       ></vue-draggable-resizable>
       <setting-panel></setting-panel>
@@ -114,7 +116,7 @@ export default {
       editorMode: 'edit',
       curSelectEle: null,
       componentPanelWidth: 240,
-      settingPanelWidth: 360,
+      settingPanelWidth: 320,
       state: {},
       formValue: {},
       formSetting: {}
@@ -197,23 +199,28 @@ export default {
         children: []
       }
     },
+    handleDragMounted (key) {
+      const dragRef = this.$refs[key]
+      const isComponentPanel = key === 'componentPanelWidth'
+      dragRef.calcDragLimits = () => {
+        return {
+          minLeft: isComponentPanel ? 0 : -160,
+          maxLeft: isComponentPanel ? 120 : 0
+        }
+      }
+      dragRef.bounds = dragRef.calcDragLimits()
+    },
     handleWidthDrag (x, key) {
-      console.log(x, key)
       const isComponentPanel = key === 'componentPanelWidth'
       this.dragOffset = isComponentPanel ? x : -x
-      const minWidth = isComponentPanel ? 240 : 360
-      let width = minWidth + this.dragOffset
-      if (width > 2 * minWidth) {
-        width = 2 * minWidth
-      } else if (width < minWidth) {
-        width = minWidth
-      }
-      this[key] = width
+      const minWidth = isComponentPanel ? 240 : 320
+      this[key] = minWidth + this.dragOffset
     },
     handleModeChange (mode) {
       this.editorMode = mode
     }
-  }
+  },
+  mounted () {}
 }
 </script>
 
@@ -256,6 +263,7 @@ export default {
     position: absolute;
     transform: translate(0px, 0px) !important;
     height: 100% !important;
+    width: 1px !important;
     bottom: 0;
     cursor: col-resize;
     touch-action: none;
