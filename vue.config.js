@@ -27,8 +27,7 @@ const assetsCDN = {
   ]
 }
 module.exports = {
-  // publicPath: isProd ? '/ant-dynamic-form/' : '/',
-  publicPath: isProd ? '/dist/' : '/',
+  publicPath: isProd ? '/ant-dynamic-form/' : '/',
   // 修改 pages 入口
   pages: {
     index: {
