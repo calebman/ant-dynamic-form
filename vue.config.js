@@ -6,6 +6,7 @@ const assetsCDN = {
   externals: {
     vue: 'Vue',
     'ant-design-vue': 'antd',
+    'ant-design-vue/dist/antd.less': 'antd',
     moment: 'moment',
     vuescroll: 'vuescroll',
     Sortable: 'Sortable',
