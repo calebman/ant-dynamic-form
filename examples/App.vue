@@ -3,7 +3,7 @@
     <div class="header">
       <div class="logo">
         <a href="https://github.com/calebman/ant-dynamic-form">
-          <img src="/logo.svg" />
+          <img src="logo.svg" />
         </a>
       </div>
       <div class="menus">
