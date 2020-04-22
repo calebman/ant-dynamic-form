@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import { cloneDeep } from '~/util'
 import ComponentPanel from './define/ComponentPanel'
 import EditorPanel from './panel/EditorPanel'
 import SettingPanel from './setting/SettingPanel'
@@ -165,15 +165,15 @@ export default {
       this.curSelectEle = ele
     },
     handleEleCopy (list, element, index) {
-      const cloneEle = _.cloneDeep(element)
+      const cloneEle = cloneDeep(element)
       // generator new key
       const deepGenKey = ele => {
-        if (!_.isEmpty(ele.children)) {
+        if (ele.children && ele.children.length > 0) {
           ele.children.forEach(o => deepGenKey(o))
         }
         const newKey = this.generatorKey(ele.component)
         ele._key = newKey
-        if (_.get(ele, 'formOptions.prop')) {
+        if (ele.formOptions && ele.formOptions.prop) {
           ele.formOptions.prop = newKey
         }
       }

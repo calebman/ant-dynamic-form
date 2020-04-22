@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import { cloneDeep } from '~/util'
 import PanelInjectMixin from '~/common/panel-inject-mixin'
 export default {
   name: 'ToolsPanel',
@@ -49,7 +49,7 @@ export default {
         } else {
           this.undoStack.push(this.historySettingClone)
         }
-        this.historySettingClone = _.cloneDeep(val)
+        this.historySettingClone = cloneDeep(val)
       },
       deep: true
     }
@@ -79,7 +79,7 @@ export default {
     }
   },
   created () {
-    this.historySettingClone = _.cloneDeep(this.formSetting)
+    this.historySettingClone = cloneDeep(this.formSetting)
   }
 }
 /**
@@ -92,9 +92,6 @@ function MaxSizeStack (size) {
     return this.items.pop()
   }
   this.push = function (item) {
-    if (_.isEqual(this.peek(), item)) {
-      return
-    }
     if (this.size() >= this.maxSize) {
       this.items.splice(0, 1)
     }
