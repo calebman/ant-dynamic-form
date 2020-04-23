@@ -248,7 +248,7 @@ export default {
       height: 45px;
     }
     .editor-panel {
-      min-height: 240px;
+      height: 100%;
     }
   }
   .right-container {

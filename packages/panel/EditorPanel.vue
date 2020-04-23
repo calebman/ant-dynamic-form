@@ -1,23 +1,20 @@
 <!-- 表单编辑器组件 -->
 <template>
-  <div class="widget-form-container">
-    <vue-scroll :ops="{ bar: { background: '#c1c1c1', size: '6px' } }">
-      <a-form-model v-bind="formSetting.options" :model="formValue" class="form-model">
-        <nested-element class="root-element" :list="formSetting.children" v-on="$listeners">
+  <vue-scroll class="form-model-container" :ops="{ bar: { background: '#c1c1c1', size: '6px' } }">
+    <a-form-model v-bind="formSetting.options" :model="formValue" class="form-model">
+      <nested-element class="root-element" :list="formSetting.children" v-on="$listeners">
+        <div slot="empty" class="empty-container">
           <a-empty
-            slot="empty"
             class="empty-panel"
             image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
-            :imageStyle="{ height: '60px' }"
+            :imageStyle="{ height: '90px' }"
           >
-            <span class="text" slot="description">
-              从左侧拖拽组件
-            </span>
+            <span class="text" slot="description">从左侧拖拽组件构建表单</span>
           </a-empty>
-        </nested-element>
-      </a-form-model>
-    </vue-scroll>
-  </div>
+        </div>
+      </nested-element>
+    </a-form-model>
+  </vue-scroll>
 </template>
 
 <script>
@@ -45,18 +42,22 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.widget-form-container {
+.form-model-container {
   height: 100%;
   width: 100%;
+  overflow: auto;
   .form-model {
     height: 100%;
+    margin-bottom: 60px;
     .root-element {
-      .empty-panel {
-        margin-top: 120px;
-        .text {
-          font-weight: 300;
-          font-size: 16px;
-          color: #ccc;
+      .empty-container {
+        padding-top: 120px;
+        .empty-panel {
+          .text {
+            font-weight: 300;
+            font-size: 17px;
+            color: #ccc;
+          }
         }
       }
     }

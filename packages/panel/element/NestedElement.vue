@@ -14,33 +14,35 @@
     <div
       v-for="(element, index) in list"
       :key="element._key"
-      :class="{ 'active': isSelectStatus(element), 'editor-view-item': isEditStatus }"
+      class="element"
       @click.stop="handleEleClick(element)"
     >
-      <!-- 布局模块 -->
-      <template v-if="element.type == 'layout'">
-        <element-layout :element="element">
-          <nested-element slot-scope="{ item }" :list="item.children" v-on="$listeners"></nested-element>
-        </element-layout>
-      </template>
-      <!-- 表单项 -->
-      <a-form-model-item v-else v-bind="element.formOptions">
-        <component
-          :is="element.component"
-          v-model="formValue[element.formOptions.prop]"
-          v-bind="element.options"
-        ></component>
-      </a-form-model-item>
-      <!-- 操作按钮 移除与拖拽 -->
-      <div v-show="isSelectStatus(element)">
-        <div class="view-remove">
-          <merge-icon type="copy" @click.stop="handleComponentCopy(element, index)"></merge-icon>
-          <merge-icon type="delete" @click.stop="handleComponentDelete(element, index)"></merge-icon>
-        </div>
-        <div class="view-drag">
-          <div class="triangle"></div>
-          <div class="desc">
-            <merge-icon class="drag-widget" type="drag"></merge-icon>
+      <div :class="{ 'active': isSelectStatus(element), 'editor-view-item': isEditStatus }">
+        <!-- 布局模块 -->
+        <template v-if="element.type == 'layout'">
+          <element-layout :element="element">
+            <nested-element slot-scope="{ item }" :list="item.children" v-on="$listeners"></nested-element>
+          </element-layout>
+        </template>
+        <!-- 表单项 -->
+        <a-form-model-item v-else v-bind="element.formOptions">
+          <component
+            :is="element.component"
+            v-model="formValue[element.formOptions.prop]"
+            v-bind="element.options"
+          ></component>
+        </a-form-model-item>
+        <!-- 操作按钮 移除与拖拽 -->
+        <div v-show="isSelectStatus(element)">
+          <div class="view-remove">
+            <merge-icon type="copy" @click.stop="handleComponentCopy(element, index)"></merge-icon>
+            <merge-icon type="delete" @click.stop="handleComponentDelete(element, index)"></merge-icon>
+          </div>
+          <div class="view-drag">
+            <div class="triangle"></div>
+            <div class="desc">
+              <merge-icon class="drag-widget" type="drag"></merge-icon>
+            </div>
           </div>
         </div>
       </div>
@@ -132,59 +134,61 @@ export default {
       color: #ccc;
     }
   }
-  .editor-view-item {
-    min-height: 30px;
-    margin: 8px;
-    border: 1px dashed #ccc;
-    background: #fff;
-    cursor: pointer;
-    position: relative;
-    &.active {
-      outline: 2px solid #409eff;
-      border: 1px solid #409eff;
-    }
-    &:hover {
-      border: 1px solid #409eff;
-    }
-    .view-remove {
-      position: absolute;
-      right: -2px;
-      bottom: -2px;
-      height: 28px;
-      color: #fff;
-      line-height: 28px;
-      background: #409eff;
-      z-index: 9;
-      i {
-        font-size: 14px;
-        color: #fff;
-        margin: 0 5px;
-        cursor: pointer;
+  .element {
+    padding: 8px;
+    .editor-view-item {
+      min-height: 30px;
+      border: 1px dashed #ccc;
+      background: #fff;
+      cursor: pointer;
+      position: relative;
+      &.active {
+        outline: 2px solid #409eff;
+        border: 1px solid #409eff;
       }
-    }
-    .view-drag {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      width: 36px;
-      height: 36px;
-      overflow: hidden;
-      .triangle {
-        width: 0;
-        height: 0;
-        border-top: 36px solid;
-        border-right: 36px solid transparent;
-        border-top-color: #409eff;
+      &:hover {
+        border: 1px solid #409eff;
       }
-      .desc {
+      .view-remove {
         position: absolute;
-        top: 0;
-        left: 2px;
-        z-index: 1;
+        right: -2px;
+        bottom: -2px;
+        height: 28px;
+        color: #fff;
+        line-height: 28px;
+        background: #409eff;
+        z-index: 9;
         i {
-          font-size: 17px;
+          font-size: 14px;
           color: #fff;
-          cursor: move;
+          margin: 0 5px;
+          cursor: pointer;
+        }
+      }
+      .view-drag {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 36px;
+        height: 36px;
+        overflow: hidden;
+        .triangle {
+          width: 0;
+          height: 0;
+          border-top: 36px solid;
+          border-right: 36px solid transparent;
+          border-top-color: #409eff;
+        }
+        .desc {
+          position: absolute;
+          top: 0;
+          left: 2px;
+          z-index: 1;
+          i {
+            font-size: 17px;
+            color: #fff;
+            cursor: move;
+          }
         }
       }
     }
