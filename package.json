@@ -1,6 +1,6 @@
 {
   "name": "ant-dynamic-form",
-  "version": "0.1.0",
+  "version": "0.0.1-beta",
   "description": "基于ant-design-vue实现的可拖拽式动态表单",
   "private": true,
   "keywords": ["ant-design-vue", "dynamic", "form"],
