@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/ant-dynamic-form-logo-color-primary.svg"/></p>
+<p align="center"><img src="https://resources.chenjianhui.site/ant-dynamic-form-logo-color-primary.svg"/></p>
 <p align="center"><strong>可拖拽式表单构建器</strong></p>
 
 ## 简介
@@ -19,7 +19,7 @@
 
 如上述的增删改查它的复杂度由以下因素构成
 
-![](docs/images/form-complexity.png)
+![](https://resources.chenjianhui.site/form-complexity.png)
 
 1. 字段数量：涉及大量字段的数据录入场景
 2. 表单排版：当字段数量较多时，如不进行合适的模块拆分整体页面效果会显得极差
@@ -33,7 +33,7 @@
 
 不管是哪种情况都很恶心人，于是碰到与业务耦合性没那么强且大部分为数据采集的模块系统时，我们会用动态去适应它们。所谓的动态就是**后端动态建表、前端动态生成表格、筛选、表单、详情页**，在这个场景下**ant-dynamic-form**可以大行其道。
 
-![](docs/images/dynamic-data-system.png)
+![](https://resources.chenjianhui.site/dynamic-data-system.png)
 
 #### 场景三、与甲方的沟通工具
 

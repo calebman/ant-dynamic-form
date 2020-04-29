@@ -2,12 +2,12 @@
 
 #### 表格与筛选
 
-![](images/table-filter.png)
+![](https://resources.chenjianhui.site/table-filter.png)
 
 #### 表单
 
-![](images/form.png)
+![](https://resources.chenjianhui.site/form.png)
 
 #### 详情页
 
-![](images/detail.png)
+![](https://resources.chenjianhui.site/detail.png)
