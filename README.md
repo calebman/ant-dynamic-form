@@ -3,7 +3,7 @@
 
 ## 简介
 
-**ant-dynamic-form**是一个基于[Ant Design Vue](https://github.com/vueComponent/ant-design-vue)为基础组件实现的动态表单构建器，它有以下可能的应用场景：
+**ant-dynamic-form**是一个基于[Ant Design Vue](https://github.com/vueComponent/ant-design-vue)为基础组件实现的动态表单构建器，它有以下可能的应用场景：
 
 #### 场景一、CRUD操作
 
