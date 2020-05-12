@@ -67,7 +67,7 @@ export default {
           c => c.component === o.component
         )
         let title
-        const componentName = componentObj ? componentObj.name : o.component
+        const componentName = componentObj ? componentObj.options.name : o.component
         const options = o.options || {}
         switch (o.component) {
           case 'ATabPanel':
@@ -82,7 +82,7 @@ export default {
           title: title || componentName,
           origin: o
         }
-        copyObj.icon = componentObj ? componentObj.icon : 'question'
+        copyObj.icon = componentObj ? componentObj.options.icon : 'question'
         copyObj.scopedSlots = { icon: 'custom-icon', title: 'custom-title' }
         if (o.children && o.children.length > 0) {
           copyObj.children = this.transfer(o.children)
