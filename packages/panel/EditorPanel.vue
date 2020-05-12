@@ -19,7 +19,7 @@
 
 <script>
 import VueScroll from 'vuescroll'
-import NestedElement from './element/NestedElement'
+import NestedElement from './NestedElement'
 import PanelInjectMixin from '~/common/panel-inject-mixin'
 export default {
   name: 'EditorPanel',

@@ -20,9 +20,9 @@
       <div :class="{ 'active': isSelectStatus(element), 'editor-view-item': isEditStatus }">
         <!-- 布局模块 -->
         <template v-if="element.type == 'layout'">
-          <element-layout :element="element">
+          <component :is="element.component" :element="element">
             <nested-element slot-scope="{ item }" :list="item.children" v-on="$listeners"></nested-element>
-          </element-layout>
+          </component>
         </template>
         <!-- 表单项 -->
         <a-form-model-item v-else v-bind="element.formOptions">
@@ -53,14 +53,12 @@
 <script>
 import PanelInjectMixin from '~/common/panel-inject-mixin'
 import Draggable from 'vuedraggable'
-import ElementLayout from './layout'
 import MergeIcon from '~/components/MergeIcon'
 export default {
   name: 'NestedElement',
   mixins: [PanelInjectMixin],
   components: {
     Draggable,
-    ElementLayout,
     MergeIcon
   },
   props: {

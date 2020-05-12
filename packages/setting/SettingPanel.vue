@@ -21,8 +21,8 @@
 </template>
 
 <script>
+import factory from '~/common/component-factory'
 import PanelInjectMixin from '~/common/panel-inject-mixin'
-import ComponentsMixin from '~/common/components-mixin'
 import MenuTab from '~/components/MenuTab'
 import VueScroll from 'vuescroll'
 import FormItemConfig from './FormItemConfig'
@@ -30,7 +30,7 @@ import LayoutItemConfig from './LayoutItemConfig'
 import ComponentConfig from './ComponentConfig'
 export default {
   name: 'SettingPanel',
-  mixins: [PanelInjectMixin, ComponentsMixin],
+  mixins: [PanelInjectMixin],
   components: {
     MenuTab,
     VueScroll,
@@ -43,10 +43,10 @@ export default {
       return this.curSelectEle && this.allComponents.find(o => o.component === this.curSelectEle.component)
     },
     showFormConfig () {
-      return this.curComponentDefine && this.curComponentDefine.isFormComponent
+      return this.curComponentDefine && this.curComponentDefine.type === 'form'
     },
     showLayoutConfig () {
-      return this.curComponentDefine && this.curComponentDefine.isLayoutComponent
+      return this.curComponentDefine && this.curComponentDefine.type === 'layout'
     },
     showComponentConfig () {
       return this.curSelectEle
@@ -64,12 +64,13 @@ export default {
     },
     curComponentDefine (val) {
       if (val) {
-        this.configTab = val.isLayoutComponent ? 'layout' : 'form'
+        this.configTab = val.type
       }
     }
   },
   data () {
     return {
+      allComponents: factory.getAllComponents(),
       configTab: 'layout'
     }
   },

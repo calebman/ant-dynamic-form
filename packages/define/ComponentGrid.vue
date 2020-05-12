@@ -10,10 +10,10 @@
         :clone="handleCloneElement"
         v-bind="dragOptions"
       >
-        <li v-for="(item, index) in componentList" class="form-edit-widget-label" :key="index">
+        <li v-for="(component, index) in componentList" class="form-edit-widget-label" :key="index">
           <a>
-            <merge-icon :type="item.icon" class="icon"></merge-icon>
-            <span>{{ item.name }}</span>
+            <merge-icon :type="component.options.icon" class="icon"></merge-icon>
+            <span>{{ component.options.name }}</span>
           </a>
         </li>
       </draggable>
@@ -55,7 +55,7 @@ export default {
     }
   },
   methods: {
-    handleCloneElement ({ name, type, component, isFormComponent, isLayoutComponent, initProps, initItemProps }) {
+    handleCloneElement ({ type, component, options }) {
       const newKey = this.generatorKey(component)
       const cloneElement = {
         _key: newKey,
@@ -64,19 +64,19 @@ export default {
         children: [],
         formOptions: {},
         options: {
-          ...initProps
+          ...this.loadDefaultProps(options)
         }
       }
-      if (isFormComponent) {
+      if (type === 'form') {
         cloneElement.formOptions = {
           prop: newKey,
-          label: this.generatorKey(name),
+          label: this.generatorKey(options.name),
           required: false,
           colon: true,
           labelAlign: 'right'
         }
       }
-      if (isLayoutComponent) {
+      if (type === 'layout') {
         // 2 child default
         for (let i = 0; i < 2; i++) {
           cloneElement.children.push({
@@ -84,13 +84,29 @@ export default {
             component: 'LayoutItem',
             options: {
               name: `LayoutItem${i}`,
-              ...initItemProps
+              ...this.loadDefaultProps(options)
             },
             children: []
           })
         }
       }
       return cloneElement
+    },
+    loadDefaultProps ({ props = {} }) {
+      const defaultVals = {}
+      Object.keys(props).forEach(k => {
+        const prop = props[k]
+        if (prop.type === 'checkGroup') {
+          prop.options.forEach(opt => {
+            if (opt.default !== undefined) {
+              defaultVals[opt.value] = opt.default
+            }
+          })
+        } else if (prop.default !== undefined) {
+          defaultVals[k] = prop.default
+        }
+      })
+      return defaultVals
     }
   }
 }

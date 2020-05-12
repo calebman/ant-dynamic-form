@@ -25,17 +25,18 @@
 </template>
 
 <script>
-import ComponentsMixin from '~/common/components-mixin'
+import factory from '~/common/component-factory'
 import PanelInjectMixin from '~/common/panel-inject-mixin'
 import ConfigForm from './ConfigForm'
 export default {
   name: 'LayoutItemConfig',
-  mixins: [ComponentsMixin, PanelInjectMixin],
+  mixins: [PanelInjectMixin],
   components: {
     ConfigForm
   },
   data () {
     return {
+      allComponents: factory.getAllComponents(),
       formItems: []
     }
   },
@@ -64,7 +65,7 @@ export default {
         component: 'LayoutItem',
         options: {
           name: `LayoutItem${len + 1}`,
-          ...this.curComponentDefine.initItemProps
+          ...this.loadDefaultProps(this.curComponentDefine.options)
         },
         children: []
       })
@@ -72,6 +73,22 @@ export default {
     handleItemRemove (item) {
       const { children } = this.curSelectEle
       children.splice(children.indexOf(item), 1)
+    },
+    loadDefaultProps ({ props = {} }) {
+      const defaultVals = {}
+      Object.keys(props).forEach(k => {
+        const prop = props[k]
+        if (prop.type === 'checkGroup') {
+          prop.options.forEach(opt => {
+            if (opt.default !== undefined) {
+              defaultVals[opt.value] = opt.default
+            }
+          })
+        } else if (prop.default !== undefined) {
+          defaultVals[k] = prop.default
+        }
+      })
+      return defaultVals
     },
     initForm () {
       let formItems = []

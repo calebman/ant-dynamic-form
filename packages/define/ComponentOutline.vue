@@ -32,17 +32,18 @@
 </template>
 
 <script>
-import ComponentsMixin from '~/common/components-mixin'
+import factory from '~/common/component-factory'
 import PanelInjectMixin from '~/common/panel-inject-mixin'
 import MergeIcon from '~/components/MergeIcon'
 export default {
   name: 'ComponentOutline',
-  mixins: [ComponentsMixin, PanelInjectMixin],
+  mixins: [PanelInjectMixin],
   components: {
     MergeIcon
   },
   data () {
     return {
+      allComponents: factory.getAllComponents(),
       expandedKeys: [],
       searchValue: '',
       autoExpandParent: true

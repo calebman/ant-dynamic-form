@@ -3,8 +3,12 @@
   <div class="component-panel">
     <vue-scroll :ops="{ bar: { background: '#c1c1c1', size: '6px' } }">
       <div class="form-editor-compoents-list">
-        <component-grid title="基础组件" :componentList="basicComponents"></component-grid>
-        <component-grid title="布局组件" :componentList="layoutComponents"></component-grid>
+        <component-grid
+          v-for="repo in repos"
+          :key="repo.key"
+          :title="repo.name"
+          :componentList="repo.componentDefs">
+        </component-grid>
       </div>
       <a-collapse class="form-component-outlie">
         <a-collapse-panel class="outline-panel" header="大纲" key="1">
@@ -16,13 +20,12 @@
 </template>
 
 <script>
-import ComponentsMixin from '~/common/components-mixin'
+import factory from '~/common/component-factory'
 import VueScroll from 'vuescroll'
 import ComponentGrid from './ComponentGrid'
 import ComponentOutline from './ComponentOutline'
 export default {
   name: 'ComponentPanel',
-  mixins: [ComponentsMixin],
   components: {
     VueScroll,
     ComponentGrid,
@@ -30,6 +33,7 @@ export default {
   },
   data () {
     return {
+      repos: factory.getRepos(),
       operaTab: 'component',
       operaTabs: [
         { value: 'component', icon: 'bank', label: '组件' },

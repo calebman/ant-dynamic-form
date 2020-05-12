@@ -1,20 +1,21 @@
 <!-- 组件配置表单 -->
 <template>
-  <config-form v-model="curSelectEle.options" :formItems="formItems" ></config-form>
+  <config-form v-model="curSelectEle.options" :formItems="formItems"></config-form>
 </template>
 
 <script>
-import ComponentsMixin from '~/common/components-mixin'
+import factory from '~/common/component-factory'
 import PanelInjectMixin from '~/common/panel-inject-mixin'
 import ConfigForm from './ConfigForm'
 export default {
   name: 'ComponentConfigForm',
-  mixins: [ComponentsMixin, PanelInjectMixin],
+  mixins: [PanelInjectMixin],
   components: {
     ConfigForm
   },
   data () {
     return {
+      allComponents: factory.getAllComponents(),
       formItems: []
     }
   },
@@ -31,7 +32,7 @@ export default {
       let formItems = []
       const componentDefine = this.allComponents.find(c => c.component === element.component)
       if (componentDefine) {
-        formItems = Object.entries(componentDefine.props).map(([key, value]) => {
+        formItems = Object.entries(componentDefine.options.props).map(([key, value]) => {
           return Object.assign(value, { prop: key })
         })
       }
