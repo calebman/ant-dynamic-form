@@ -1,15 +1,36 @@
 <!-- 工具箱面板 -->
 <template>
   <div class="tools-panel">
-    <a-button icon="undo" type="link" size="small" :disabled="undoStack.size() === 0" @click="handleUndo">撤回</a-button>
-    <a-button icon="redo" type="link" size="small" :disabled="redoStack.size() === 0" @click="handleRedo">重做</a-button>
-    <a-divider type="vertical" />
+    <a-button
+      v-show="mode === 'edit'"
+      icon="undo"
+      type="link"
+      size="small"
+      :disabled="undoStack.size() === 0"
+      @click="handleUndo">撤回</a-button>
+    <a-button
+      v-show="mode === 'edit'"
+      icon="redo"
+      type="link"
+      size="small"
+      :disabled="redoStack.size() === 0"
+      @click="handleRedo">重做</a-button>
+    <a-divider v-show="mode === 'edit'" type="vertical" />
     <a-button icon="bulb" type="link" size="small">表单提交</a-button>
     <a-button icon="search" type="link" size="small">配置查看</a-button>
     <a-divider type="vertical" />
-    <a-button icon="delete" type="link" size="small" @click="handleClear">清空</a-button>
-    <a-button icon="check" type="link" size="small">完成</a-button>
-    <a-divider type="vertical" />
+    <a-button
+      v-show="mode === 'edit'"
+      icon="delete"
+      type="link"
+      size="small"
+      @click="handleClear">清空</a-button>
+    <a-button
+      v-show="mode === 'edit'"
+      icon="check"
+      type="link"
+      size="small">完成</a-button>
+    <a-divider v-show="mode === 'edit'" type="vertical" />
     <a-button
       v-show="mode === 'preview'"
       icon="eye"
