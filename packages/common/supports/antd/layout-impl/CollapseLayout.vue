@@ -7,7 +7,7 @@
           <merge-icon :type="item.options.extraIcon.icon" />
         </a-tooltip>
       </template>
-      <slot :item="item"></slot>
+      <slot :child="item"></slot>
     </a-collapse-panel>
   </a-collapse>
 </template>

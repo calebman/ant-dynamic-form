@@ -21,7 +21,7 @@
         <!-- 布局模块 -->
         <template v-if="element.type == 'layout'">
           <component :is="element.component" :element="element">
-            <nested-element slot-scope="{ item }" :list="item.children" v-on="$listeners"></nested-element>
+            <nested-element slot-scope="{ child }" :list="child.children" v-on="$listeners"></nested-element>
           </component>
         </template>
         <!-- 表单项 -->

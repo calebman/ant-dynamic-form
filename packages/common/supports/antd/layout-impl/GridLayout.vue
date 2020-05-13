@@ -7,7 +7,7 @@
       :span="item.options.span || (24 / element.children.length)"
       :key="item._key"
     >
-      <slot :item="item"></slot>
+      <slot :child="item"></slot>
     </a-col>
   </a-row>
 </template>

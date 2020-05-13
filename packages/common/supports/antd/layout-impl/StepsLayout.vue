@@ -12,7 +12,7 @@
       </a-step>
     </a-steps>
     <div v-for="(item, index) in element.children" :key="item._key" v-show="index === currentStep" class="container">
-      <slot :item="item"></slot>
+      <slot :child="item"></slot>
     </div>
   </div>
 </template>

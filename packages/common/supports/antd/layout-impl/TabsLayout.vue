@@ -12,7 +12,7 @@
         </a-tooltip>
         {{ item.options.name }}
       </template>
-      <slot :item="item"></slot>
+      <slot :child="item"></slot>
     </a-tab-pane>
   </a-tabs>
 </template>
