@@ -30,7 +30,7 @@ export default {
   methods: {
     initForm (element) {
       let formItems = []
-      const componentDefine = this.allComponents.find(c => c.component === element.component)
+      const componentDefine = this.allComponents.find(c => c.component.name === element.component.name)
       if (componentDefine) {
         formItems = Object.entries(componentDefine.options.props).map(([key, value]) => {
           return Object.assign(value, { prop: key })

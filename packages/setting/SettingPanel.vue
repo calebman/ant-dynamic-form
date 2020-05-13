@@ -40,7 +40,7 @@ export default {
   },
   computed: {
     curComponentDefine () {
-      return this.curSelectEle && this.allComponents.find(o => o.component === this.curSelectEle.component)
+      return this.curSelectEle && this.allComponents.find(o => o.component.name === this.curSelectEle.component.name)
     },
     showFormConfig () {
       return this.curComponentDefine && this.curComponentDefine.type === 'form'
